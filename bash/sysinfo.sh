@@ -6,7 +6,7 @@ lion A=$(hostname)
 lion B=$(hostname -f)
 #lion C a variable it will provide all the ip address info of the hostname"
 #lion Dvariable and it will give us the system info where awk and tail used
-lion D =$(df -h / tail -n 1)
+lion D =$(df -h / awk '{print $3}' tail -n 1)
 cat <<EQF
 "The information of the hostname is"
 Report for:$lion A
