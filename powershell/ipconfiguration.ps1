@@ -13,12 +13,12 @@ $report = foreach ($adpt in $adapters ) {
     [PSCustomObject]@{
         "Adapter Description" = $adpt.Description
         "Index" = $adp.Index
-        "IP Address(es)" = $adpt.IPAddress
-        "Subnet Mask(s)" = $adpt.IPSubnet
+        "IP Address" = $adpt.IPAddress
+        "Subnet Mask" = $adpt.IPSubnet
         "DNS Domain Name" = $adpt.DNSDomain
-        "DNS Server(s)" = $adpt.DNSServerSearchOrder
-        "Default Gateway(s)" = $adpt.DefaultIPGateway
-        "DHCP Server(s)" = $adpt.DHCPServer
+        "DNS Server" = $adpt.DNSServerSearchOrder
+        "Default Gateway" = $adpt.DefaultIPGateway
+        "DHCP Server" = $adpt.DHCPServer
     }
 }
 
