@@ -1,0 +1,44 @@
+#!/bin/bash
+echo "============================================="
+echo "========Run this script as sudo/root.========"
+echo "============================================="
+snap list lxd >& /dev/null
+if [ $? != "0" ]; then
+	apt update && apt upgrade -y
+	snap install lxd
+fi
+
+dpkg -L net-tools >& /dev/null
+if [ $? != "0" ]; then
+	apt install net-tools
+fi
+
+ifconfig lxdbr0 >& /dev/null
+if [ $? != "0" ]; then
+	lxd init --auto
+fi
+
+lxc launch ubuntu:20.04 COMP2101-S22
+sleep 20
+main="COMP2101-S22"
+comp=$(lxc exec COMP2101-S22 -- hostnamectl status | grep "COMP2101-S22" | awk '{print $3}')
+if [ "$comp" != "$main" ]; then
+lxc exec COMP2101-S22 -- hostnamectl set-hostname COMP2101-S22
+fi
+
+ip=$(lxc info $main | grep "inet:" |grep "global"| awk '{print $2}'|cut -d'/' -f1)
+main1=$main" "$ip
+lxc exec COMP2101-S22 -- env main2="$main1" sh -c 'echo "$main2" >> /etc/hosts'
+sleep 20
+lxc exec COMP2101-S22 -- apt update #&& apt list --upgradable
+lxc exec COMP2101-S22 -- apt install apache2 -y
+
+statuscode=$null
+statuscode=$(lxc exec COMP2101-S22 -- curl -Is http://COMP2101-S22 | grep "200 OK")
+if [[ $statuscode ]]; then
+	echo "============================================="
+	echo "=======Your Apache Website is working.======="
+	echo "============================================="
+else
+	echo "XXX Your Apache Website is not working. XXX"
+fi
